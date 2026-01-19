@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
+from streamlit_gsheets import GSheetsConnection
 
 # -----------------------------------------------------------------------------
 # 1. 페이지 기본 설정 (Page Configuration)
@@ -13,34 +14,19 @@ st.set_page_config(
 )
 
 # -----------------------------------------------------------------------------
-# 2. 가상 데이터 생성 함수 (Mock Data Generation)
-# -----------------------------------------------------------------------------
-# 데이터베이스 연결 전이므로, Pandas DataFrame을 사용하여 가상의 챈들러 업무 데이터를 생성합니다.
-@st.cache_data  # 데이터가 매번 리로드될 때마다 재생성되지 않도록 캐싱(속도 최적화)
+# 2. 데이터 로드 함수 (수정됨)
+@st.cache_data(ttl=60)  # 60초마다 데이터 갱신 (실시간성 확보)
 def load_data():
-    data = {
-        'Vessel_Name': [
-            'MV Glory', 'Ever Green', 'HMM Algeciras', 
-            'Maersk Seoul', 'MSC Oscar', 'CMA CGM Marco Polo'
-        ],
-        'ETA': [
-            datetime.now() + timedelta(hours=2),   # 2시간 뒤 도착 (곧 방선 필요)
-            datetime.now() + timedelta(days=1),
-            datetime.now() - timedelta(hours=5),   # 이미 도착함
-            datetime.now() + timedelta(days=2),
-            datetime.now() + timedelta(hours=12),
-            datetime.now() + timedelta(days=3)
-        ],
-        'Order_Status': [
-            'Pending', 'Completed', 'Pending', 
-            'Completed', 'Pending', 'Completed'
-        ],
-        'Vendor': [
-            'Alpha Provisions', 'Alpha Provisions', 'Beta Marine', 
-            'Charlie Supplies', 'Beta Marine', 'Charlie Supplies'
-        ]
-    }
-    df = pd.DataFrame(data)
+    # 구글 시트 연결 객체 생성
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    
+    # 데이터를 읽어옴 (1번째 시트를 자동으로 읽음)
+    # 기존에 만드신 시트의 헤더(첫 줄)가 Vessel_Name, ETA 등으로 되어 있어야 합니다.
+    df = conn.read()
+    
+    # 날짜 형식 변환 (구글 시트에서 날짜가 문자열로 올 수 있으므로 변환 필요)
+    # df['ETA'] = pd.to_datetime(df['ETA']) 
+    
     return df
 
 # 데이터 로드
