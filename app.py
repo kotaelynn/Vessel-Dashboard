@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 # -----------------------------------------------------------------------------
 # 모바일 환경(방선 중)에서도 잘 보이도록 layout을 'wide'로 설정하고, 탭 제목을 지정합니다.
 st.set_page_config(
-    page_title="Panwood Provision Dashboard",
+    page_title="Provision Dashboard",
     page_icon="🚢",
     layout="wide"
 )
@@ -20,7 +20,7 @@ st.set_page_config(
 def load_data():
     data = {
         'Vessel_Name': [
-            'MV Panwood Glory', 'Ever Green', 'HMM Algeciras', 
+            'MV Glory', 'Ever Green', 'HMM Algeciras', 
             'Maersk Seoul', 'MSC Oscar', 'CMA CGM Marco Polo'
         ],
         'ETA': [
@@ -65,7 +65,7 @@ selected_vendors = st.sidebar.multiselect(
 # -----------------------------------------------------------------------------
 
 # (1) 헤더 및 제목
-st.title("🚢 Panwood Provision Dashboard")
+st.title("🚢 Provision Dashboard")
 st.markdown("Last Update: " + datetime.now().strftime("%Y-%m-%d %H:%M"))
 st.markdown("---")
 
@@ -117,4 +117,4 @@ st.dataframe(
 # 5. 하단 푸터 (Footer)
 # -----------------------------------------------------------------------------
 st.markdown("---")
-st.caption("Developed by Panwood Team | Powered by Vibe Coding Strategy")
+st.caption("Developed by Provision Team | Powered by Vibe Coding Strategy")
